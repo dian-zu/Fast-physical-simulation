@@ -1,10 +1,12 @@
-import os
-import tkinter
-from tkinter import ttk 
-import tkinter.messagebox
-from pyphysicssandbox import *
-import tkinter.colorchooser  as cc
+#库导入
+import os#导入os系统库
+import tkinter#导入tkinter UI库
+from tkinter import ttk #ttk???
+import tkinter.messagebox#messagebox,一个类库
+from pyphysicssandbox import *#最最最最重要的物理库，基于pygame和pynumk
+import tkinter.colorchooser  as cc#颜色选择器
 
+#物理库的设置
 WIN_WIDTH = 800
 WIN_HT = 600
 base = static_box((0, 600), WIN_WIDTH, 10)
@@ -14,6 +16,7 @@ base.color = Color("black")
 window("Physical Simulator", WIN_WIDTH, WIN_HT)
 gravity(0.0, 500.0)
 
+#tkinter的对象？？？
 t = tkinter.Tk()#初始化对象，t
 
 def callback():

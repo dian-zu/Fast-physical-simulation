@@ -1,12 +1,11 @@
-#库导入
-import os#导入os系统库
-import tkinter#导入tkinter UI库
-from tkinter import ttk #ttk???
-import tkinter.messagebox#messagebox,一个类库
-from pyphysicssandbox import *#最最最最重要的物理库，基于pygame和pynumk
-import tkinter.colorchooser  as cc#颜色选择器
+import os
 
-#物理库的设置
+import tkinter
+from tkinter import ttk 
+import tkinter.messagebox
+from pyphysicssandbox import *
+import tkinter.colorchooser  as cc
+
 WIN_WIDTH = 800
 WIN_HT = 600
 base = static_box((0, 600), WIN_WIDTH, 10)
@@ -16,8 +15,49 @@ base.color = Color("black")
 window("Physical Simulator", WIN_WIDTH, WIN_HT)
 gravity(0.0, 500.0)
 
-#tkinter的对象？？？
 t = tkinter.Tk()#初始化对象，t
+
+
+class tishi(object):
+    def __init__(self, widget):
+        self.widget = widget
+        self.tipwindow = None
+        self.id = None
+        self.x = self.y = 0
+ 
+    def showtip(self, text):
+        "Display text in tooltip window"
+        self.text = text
+        if self.tipwindow or not self.text:
+            return
+        x, y, _cx, cy = self.widget.bbox("insert")
+        x = x + self.widget.winfo_rootx() + 27
+        y = y + cy + self.widget.winfo_rooty() +27
+        self.tipwindow = tw = tkinter.Toplevel(self.widget)
+        tw.wm_overrideredirect(1)
+        tw.wm_geometry("+%d+%d" % (x, y))
+ 
+        label = tkinter.Label(tw, text=self.text, justify=tkinter.LEFT,
+                      background="#ffffe0", relief=tkinter.SOLID, borderwidth=1,
+                      font=("tahoma", "8", "normal"))
+        label.pack(ipadx=1)
+ 
+    def hidetip(self):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw:
+            tw.destroy()
+            
+          
+def createtishi( widget, text):
+    toolTip = tishi(widget)
+    def enter(event):
+        toolTip.showtip(text)
+    def leave(event):
+        toolTip.hidetip()
+    widget.bind('<Enter>', enter)
+    widget.bind('<Leave>', leave)
+
 
 def callback():
 	res = tkinter.messagebox.askokcancel('关闭','确定退出(退出后数据清空)？')
@@ -64,7 +104,8 @@ def canvas_cao():
 	global yesno,X,Y
 
 	caogao = tkinter.Toplevel()
-	caogao.title('草稿画板')
+	caogao.title('画板草稿')
+	caogao.iconbitmap('wuli.ico')
 	caogao.geometry('800x600+50+50')
 
 	canvas = tkinter.Canvas(caogao, bg='white', width=800, height=600,cursor='pencil')
@@ -81,7 +122,12 @@ def canvas_cao():
 		X.set(event.x)
 		Y.set(event.y)
 	canvas.bind('<B1-Motion>', pen_u)
-menuc.add_command(label='画图草稿',command=canvas_cao)
+menuc.add_command(label='草稿画板',command=canvas_cao)
+menuc.add_separator()
+
+xian_tf = tkinter.IntVar()
+xian_menu = menuc.add_checkbutton(label='启用线条工具',variable=xian_tf)
+
 menuc.add_separator()
 
 menubar.add_cascade(label='工具',menu=menuc)
@@ -93,12 +139,23 @@ wrap_menu = menuw.add_checkbutton(label='页面滚动',variable=wrap_tf)
 
 menuw.add_separator()
 
-xian_tf = tkinter.IntVar()
-xian_menu = menuw.add_checkbutton(label='启用线条工具',variable=xian_tf)
+def tk_info():
+	info_ui = tkinter.Toplevel()
+	info_ui.title('页面设置')
+	info_ui.iconbitmap('wuli.ico')
+	info_ui.geometry('500x400+10+10')
 
-menuw.add_separator()
+	info_frame = tkinter.LabelFrame(info_ui,text='页面设置')
+	info_frame.place(x = 5,y = 5,width = 490,height = 100)
 
-tk_cmd = menuw.add_command(label='启用线条工具')
+	root_x_lb = tkinter.Label(info_frame,text='页面x设置：')
+	root_x_lb.place(x = 5,y = 5)
+
+	root_x_en_var = tkinter.StringVar()
+
+	root_y_lb = tkinter.Label(info_frame,text='页面y设置：')
+	root_y_lb.place(x = 5,y = 45)
+tk_cmd = menuw.add_command(label='页面设置')
 
 menuw.add_separator()
 
@@ -106,20 +163,20 @@ menubar.add_cascade(label='设置',menu=menuw)
 '''#########################################################公告
 #******************一定注意*****************'''
 def gonggao():
-	tkinter.messagebox.showinfo('2019.10.27更新公告','1.优化菜单\n2.“帮助”上线\n3.修复了若干BUG\n4.UI微微调整\n5.增加状态栏\n6.增加了异常控制\n--祝您使用愉快')
+	tkinter.messagebox.showinfo('2019.11.11更新公告','1.优化菜单\n2.“帮助”上线\n3.修复了若干BUG\n4.UI微微调整\n5.增加状态栏\n6.增加了异常控制\n--祝您使用愉快')
 menubar.add_command(label = '公告',command=gonggao)
 '''#########################################################版本号
 #******************一定注意******************'''
 menug = tkinter.Menu(menubar)
 menug.add_command(label = '版本状态：内测')
-menug.add_command(label = '版本号：0.0.00164')
+menug.add_command(label = '版本号：0.0.00166')
 menug.add_separator()
 
-menug.add_command(label = '内测状态：不开源')
+menug.add_command(label = '内测状态：开源')
 menug.add_separator()
 
 menug.add_command(label = '制作：电阻')
-menug.add_command(label = '版权：“快”应用')
+menug.add_command(label = '版权：极速程式项目应用')
 menug.add_separator()
 
 menubar.add_cascade(label='关于',menu=menug)
@@ -166,6 +223,7 @@ label_2d = tkinter.StringVar()
 label_2d.set('未选择2D图形')
 zt_2d = tkinter.StringVar()
 zt_2d.set('未添加2D图形')
+
 data_2d = []
 color = '#ff0000'
 #————————————————#
@@ -345,9 +403,27 @@ group1.place(x=210, y=5,width = 285,height=240)
 label1 = tkinter.Label(group1,textvariable=label_2d,fg='red')
 label1.place(x = 0,y=0)
 
+def label_233_bind(*args):
+	if zt_2d.get() != '未添加2D图形' and zt_2d.get() != '失败：错误！' and zt_2d.get() != '打开失败，请确定上一个图形是否添加成功！':
+		label233_ui = tkinter.Toplevel()
+		label233_ui.title('自动化工具')
+		label233_ui.iconbitmap('wuli.ico')
+		label233_ui.geometry('500x400+0+200')
+
+		set_gongneng = ttk.Notebook(label233_ui)
+
+		dingzi = tkinter.Frame(set_gongneng)
+		zidongzhou = tkinter.Frame(set_gongneng)
+
+		set_gongneng.add(dingzi,text = '固定钉')
+		set_gongneng.add(zidongzhou,text = '自动轴')
+		set_gongneng.pack(padx=10,pady=10,fill=tkinter.BOTH,expand=tkinter.TRUE)
+	else:
+		zt_2d.set('打开失败，请确定上一个图形是否添加成功！')
 label233 = tkinter.Label(t,textvariable=zt_2d,bd=1,relief=tkinter.SUNKEN,anchor=tkinter.W)  # anchor left align W -- WEST
 label233.pack(side=tkinter.BOTTOM,fill=tkinter.X)
-
+label233.bind('<Button-1>', label_233_bind)
+createtishi(label233,'点击为上一个图形开启自动化工具')
 #————————————————#
 #————————————————#
 #————————————————#

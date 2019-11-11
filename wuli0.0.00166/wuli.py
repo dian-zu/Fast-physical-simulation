@@ -169,7 +169,7 @@ menubar.add_command(label = '公告',command=gonggao)
 #******************一定注意******************'''
 menug = tkinter.Menu(menubar)
 menug.add_command(label = '版本状态：内测')
-menug.add_command(label = '版本号：0.0.00165')
+menug.add_command(label = '版本号：0.0.00166')
 menug.add_separator()
 
 menug.add_command(label = '内测状态：开源')
